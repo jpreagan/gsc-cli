@@ -1,0 +1,66 @@
+version: 2
+
+project_name: gsc-cli
+
+builds:
+  - id: gsc-cli
+    main: .
+    binary: gsc
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X github.com/jpreagan/gsc-cli/cmd.Version={{ .Version }} -X github.com/jpreagan/gsc-cli/cmd.Commit={{ .ShortCommit }} -X github.com/jpreagan/gsc-cli/cmd.Date={{ .Date }}
+
+archives:
+  - id: default
+    ids:
+      - gsc-cli
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    formats:
+      - tar.gz
+    format_overrides:
+      - goos: windows
+        formats:
+          - zip
+
+checksum:
+  name_template: checksums.txt
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+
+release:
+  github:
+    owner: jpreagan
+    name: gsc-cli
+
+brews:
+  - name: gsc-cli
+    ids:
+      - default
+    directory: Formula
+    repository:
+      owner: jpreagan
+      name: homebrew-tap
+      branch: main
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    homepage: https://github.com/jpreagan/gsc-cli
+    description: Google Search Console CLI
+    license: MIT
+    test: |
+      system "#{bin}/gsc", "--version"
+    commit_author:
+      name: goreleaserbot
+      email: "bot@goreleaser.com"
+    commit_msg_template: "brew(gsc-cli): update {{ .Tag }}"

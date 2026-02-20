@@ -4,9 +4,15 @@ A command line tool for the Google Search Console API.
 
 ## Install
 
+Homebrew:
+
 ```bash
-go install github.com/jpreagan/gsc-cli@latest
+brew install jpreagan/tap/gsc-cli
 ```
+
+Prebuilt binaries:
+
+- Download from https://github.com/jpreagan/gsc-cli/releases/latest
 
 ## Quick Start
 
@@ -117,11 +123,6 @@ gsc --account default auth add
 
 Account names must be `a-zA-Z0-9` plus `_` or `-` (max 64 chars).
 
-## Development
+## License
 
-```bash
-gofmt -w .
-go vet ./...
-go test ./...
-go run . --help
-```
+[MIT License](LICENSE)
